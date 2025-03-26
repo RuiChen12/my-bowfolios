@@ -1,0 +1,83 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // for local development
+  url      = env("DATABASE_URL")
+  // for Vercel
+  // url       = env("POSTGRES_PRISMA_URL")
+  // directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  password String
+  role     Role   @default(USER)
+}
+
+model Profile {
+  id        Int               @id @default(autoincrement())
+  email     String            @unique
+  firstName String?
+  lastName  String?
+  bio       String?
+  title     String?
+  picture   String?
+  interests ProfileInterest[]
+  projects  ProfileProject[]
+}
+
+model Interest {
+  id       Int               @id @default(autoincrement())
+  name     String            @unique
+  profiles ProfileInterest[]
+  projects ProjectInterest[]
+}
+
+model Project {
+  id          Int               @id @default(autoincrement())
+  name        String            @unique
+  homepage    String?
+  description String?
+  picture     String?
+  profiles    ProfileProject[]
+  interests   ProjectInterest[]
+}
+
+model ProfileInterest {
+  id         Int      @id @default(autoincrement())
+  profileId  Int
+  interestId Int
+  profile    Profile  @relation(fields: [profileId], references: [id])
+  interest   Interest @relation(fields: [interestId], references: [id])
+}
+
+model ProfileProject {
+  id        Int     @id @default(autoincrement())
+  profileId Int
+  projectId Int
+  profile   Profile @relation(fields: [profileId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id])
+}
+
+model ProjectInterest {
+  id         Int      @id @default(autoincrement())
+  projectId  Int
+  interestId Int
+  project    Project  @relation(fields: [projectId], references: [id])
+  interest   Interest @relation(fields: [interestId], references: [id])
+}
