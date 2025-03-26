@@ -14,11 +14,9 @@ const NavBar: React.FC = () => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const currentUser = session?.user?.email;
-  // const userWithRole = session?.user as { email: string; randomKey: string };
-  // const role = userWithRole?.randomKey;
   const menuStyle = { marginBottom: '0px' };
   const navbarClassName = currentUser ? 'bg-dark' : 'bg-light';
-  // const navbarVariant = currentUser ? 'dark' : 'light';
+
   return (
     <Navbar expand="lg" style={menuStyle} className={navbarClassName}>
       <Container>
@@ -46,6 +44,17 @@ const NavBar: React.FC = () => {
             >
               Profiles
             </Nav.Link>
+
+            {/* ✅ I’m Feeling Lucky link 插入在这里 */}
+            <Nav.Link
+              id="navbar-lucky"
+              active={pathname === '/lucky'}
+              href="/lucky"
+              key="lucky"
+            >
+              I’m Feeling Lucky!
+            </Nav.Link>
+
             <Nav.Link
               id={ComponentIDs.projectsMenuItem}
               active={pathname === '/projects'}
